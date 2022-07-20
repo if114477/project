@@ -1,0 +1,620 @@
+import tkinter as tk
+from tkinter import filedialog as fd
+from PIL import Image, ImageTk
+import pygame
+import time
+
+music_path = None
+canvas_ds = None
+file_0 = None
+file_1 = None
+file_2 = None
+file_3 = None
+file_4 = None
+file_5 = None
+file_6 = None
+file_7 = None
+file_inc = None
+file_dec = None
+file_re = None
+file_11 = None
+file_12 = None
+file_13 = None
+file_14 = None
+
+
+def openfile():
+    global music_path
+    music_path = fd.askopenfilename()
+    fpa = open('file_path.txt', 'w')
+    fpa.write(music_path)
+    fpa.close()
+
+
+def identify():
+    eng = matlab.engine.start_matlab()
+    eng.dqw(nargout=0)
+    time.sleep(10)
+
+
+def play_music():
+    pygame.mixer.init()
+    pygame.mixer.music.load(music_path)
+    pygame.mixer.music.play()
+
+
+def pause_music():
+    pygame.mixer.music.pause()
+
+
+def unpause_music():
+    pygame.mixer.music.unpause()
+
+
+class top_UI(tk.Toplevel):  # 彈出子視窗
+    def __init__(self):
+        super().__init__()
+        self.title('設定')
+        self.geometry('300x100')
+        self.resizable(0, 0)
+        self.setup_UI()
+
+    def setup_UI(self):  # 子視窗內容設定
+
+        row1 = tk.Frame(self)
+        row1.pack(fill="x")
+        tk.Label(row1, text='節拍', font=12, width=15).pack(side=tk.LEFT)
+        self.tempo = tk.StringVar()
+        tk.Entry(row1, textvariable=self.tempo, width=15).pack(side=tk.LEFT)
+
+        row2 = tk.Frame(self)
+        row2.pack(fill="x")
+        tk.Label(row2, text='每分鐘速度', font=12, width=15).pack(side=tk.LEFT)
+        self.speed = tk.StringVar()
+        tk.Entry(row2, textvariable=self.speed, width=15).pack(side=tk.LEFT)
+
+        row3 = tk.Frame(self)
+        row3.pack(fill="x")
+        tk.Button(row3, text="確定", command=self.ok).pack(side=tk.RIGHT)
+        tk.Button(row3, text="取消", command=self.cancel).pack(side=tk.RIGHT)
+
+    def ok(self):  # 取得子視窗資料
+        self.userinfo = [self.tempo.get(), self.speed.get()]
+        self.destroy()
+
+    def cancel(self):  # 銷毀子視窗
+        self.userinfo = None
+        self.destroy()
+
+
+class main_UI(tk.Tk):  # 主視窗
+    def __init__(self):
+        super().__init__()
+        self.title('簡易樂譜')
+        self.geometry('800x1280')
+        self.tempo = ''
+        self.speed = ''
+
+        filemenu = tk.Menu(self)  # 下拉選單
+        self.config(menu=filemenu)
+        menu = tk.Menu(filemenu)
+        filemenu.add_cascade(label='檔案', menu=menu)
+        menu.add_command(label='開啟音樂', command=openfile)
+        menu.add_command(label='設定', command=self.setup_config)
+        menu.add_command(label='關閉檔案', command=self.destroy)
+
+        self.setup()
+        global file_0, file_1, file_2, file_3, file_4, file_5, file_6, file_7, file_inc, file_dec, file_re, file_11, \
+            file_12, file_13, file_14
+
+        global canvas_ds
+        canvas_ds = tk.Canvas(self, bg='white', height=1024, width=768)
+
+        img_0 = Image.open('0.png')
+        file_0 = ImageTk.PhotoImage(img_0)
+
+        img_1 = Image.open('1.png')
+        file_1 = ImageTk.PhotoImage(img_1)
+
+        img_2 = Image.open('2.png')
+        file_2 = ImageTk.PhotoImage(img_2)
+
+        img_3 = Image.open('3.png')
+        file_3 = ImageTk.PhotoImage(img_3)
+
+        img_4 = Image.open('4.png')
+        file_4 = ImageTk.PhotoImage(img_4)
+
+        img_5 = Image.open('5.png')
+        file_5 = ImageTk.PhotoImage(img_5)
+
+        img_6 = Image.open('6.png')
+        file_6 = ImageTk.PhotoImage(img_6)
+
+        img_7 = Image.open('7.png')
+        file_7 = ImageTk.PhotoImage(img_7)
+
+        img_8 = Image.open('inc.png')
+        file_inc = ImageTk.PhotoImage(img_8)
+
+        img_9 = Image.open('dec.png')
+        file_dec = ImageTk.PhotoImage(img_9)
+
+        img_10 = Image.open('re.png')
+        file_re = ImageTk.PhotoImage(img_10)
+
+        img_11 = Image.open('bk.jpg')
+        file_11 = ImageTk.PhotoImage(img_11)
+
+        img_12 = Image.open('123.jpg')
+        file_12 = ImageTk.PhotoImage(img_12)
+
+        img_13 = Image.open('456.png')
+        file_13 = ImageTk.PhotoImage(img_13)
+
+        img_14 = Image.open('dot.jpg')
+        file_14 = ImageTk.PhotoImage(img_14)
+
+    def setup(self):  # 主視窗內容設定
+        row1 = tk.Frame(self)
+        row1.pack(fill="x")
+        tk.Label(row1, text='節拍', font=20, width=10, bg='white').pack(side=tk.LEFT)
+        self.l1 = tk.Label(row1, text=self.tempo, width=45, bg='white')
+        self.l1.pack(side=tk.LEFT)
+        tk.Label(row1, text='每分鐘速度', font=20, width=20, bg='white').pack(side=tk.LEFT)
+        self.l2 = tk.Label(row1, text=self.speed, width=40, bg='white')
+        self.l2.pack(side=tk.LEFT)
+        row2 = tk.Frame(self)
+        row2.pack(fill='x')
+
+        tk.Button(row2, text='開啟音樂', width=13, command=openfile).pack(padx=6, side=tk.LEFT)
+        tk.Button(row2, text='開始辨識', width=13).pack(padx=6, side=tk.LEFT)
+        tk.Button(row2, text='顯示樂譜', width=13, command=self.display).pack(padx=6, side=tk.LEFT)
+        tk.Button(row2, text='撥放音樂', width=13, command=play_music).pack(padx=6, side=tk.LEFT)
+        tk.Button(row2, text='暫停音樂', width=13, command=pause_music).pack(padx=6, side=tk.LEFT)
+        tk.Button(row2, text='繼續撥放', width=13, command=unpause_music).pack(padx=6, side=tk.LEFT)
+        tk.Button(row2, text='設定', width=13, command=self.setup_config).pack(padx=6, side=tk.LEFT)
+
+    def display(self):
+        canvas_ds.delete("all")
+        with open('music1.txt', 'r', encoding='utf-8') as fp:  # 大致完成 剩餘升降符號
+            x = 30
+            y = 50
+            y_bk = 40
+            y_123 = 55
+            count_block = 0
+            count_line = 0
+            count = 0
+            stbl = 0
+            count_eight = 0
+            sharp = [0, 0, 0, 0, 0]  # 升記號
+            for i in fp.readlines():
+                i = i.strip("\n")
+                note = ['/', 'do', 're', 'mi', 'fa', 'so', 'la', 'si', '休止符', '二分音符', '四分音符', '八分音符', '附點四分音符', '全音符',
+                        '附點二分音符',
+                        '1點do', '1點re', '1點mi', '1點fa', '1點so', '1點la', '1點si', '2點do', '2點re',
+                        '#do', '#re', '#fa', '#so', '#la', '1點#do', '1點#re', '1點#fa', '1點#so', '1點#la', '2點#do',
+                        '2點#re']
+                #        0     1    2     3     4     5     6     7     8      9      10     11     12        13     14
+                #       15         16      17      18       19       20      21       22      23
+                #       24      25    26     27     28      29       30       31        32         33       34        35
+                if count == 5:
+                    y += 80
+                    y_bk += 80
+                    y_123 += 80
+                    x = 30
+                    canvas_ds.create_image(x, y_bk, anchor='nw', image=file_11)
+                    x += 15
+                    count = 1
+                if note[0] == i:
+                    canvas_ds.create_image(x, y_bk, anchor='nw', image=file_11)
+                    x += 15
+                    count += 1
+                    sharp = [0, 0, 0, 0, 0]
+                    count_eight = 0
+                elif note[1] == i:  # do    `
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_1)
+                    if sharp[0] == 1:
+                        x -= 2
+                        y -= 7
+                        canvas_ds.create_image(x, y, anchor='nw', image=file_re)
+                        x += 2
+                        y += 7
+                        sharp[0] = 0
+
+                elif note[2] == i:  # re
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_2)
+                    if sharp[1] == 1:
+                        x -= 2
+                        y -= 7
+                        canvas_ds.create_image(x, y, anchor='nw', image=file_re)
+                        x += 2
+                        y += 7
+                        sharp[1] = 0
+                elif note[3] == i:  # mi
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_3)
+                elif note[4] == i:  # fa
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_4)
+                    if sharp[2] == 1:
+                        x -= 2
+                        y -= 7
+                        canvas_ds.create_image(x, y, anchor='nw', image=file_re)
+                        x += 2
+                        y += 7
+                        sharp[2] = 0
+                elif note[5] == i:  # so
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_5)
+                    if sharp[3] == 1:
+                        x -= 2
+                        y -= 7
+                        canvas_ds.create_image(x, y, anchor='nw', image=file_re)
+                        x += 2
+                        y += 7
+                        sharp[3] = 0
+                elif note[6] == i:  # la
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_6)
+                    if sharp[4] == 1:
+                        x -= 2
+                        y -= 7
+                        canvas_ds.create_image(x, y, anchor='nw', image=file_re)
+                        x += 2
+                        y += 7
+                        sharp[4] = 0
+                elif note[7] == i:  # si
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_7)
+                elif note[8] == i:
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_0)
+                    stbl += 1
+                elif note[9] == i:  # 二分音符
+                    if stbl == 0:
+                        x += 36.4
+                        canvas_ds.create_image(x, y_123, anchor='nw', image=file_12)
+                        x += 43.6
+                    else:
+                        x += 40
+                        canvas_ds.create_image(x, y, anchor='nw', image=file_0)
+                        x += 40
+                        stbl -= 1  # 二分音符
+                        count_eight = 0
+                elif note[10] == i:  # 四分音符
+                    x += 40
+                    stbl = 0
+                    count_eight = 0
+                elif note[11] == i:  # 八分音符
+                    if count_eight != 0:
+                        y += 30
+                        x -= 7
+                        canvas_ds.create_image(x, y, anchor='nw', image=file_13)
+                        x += 7
+                        y -= 30
+                    y += 30
+                    x += 2
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_13)
+                    x -= 2
+                    x += 20
+                    y -= 30
+                    stbl = 0
+                    count_eight += 1
+                elif note[12] == i:  # 副點四分音符
+                    x += 22
+                    y += 11
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_14)
+                    x -= 22
+                    y -= 11
+                    x += 60
+                    stbl = 0
+                    count_eight = 0
+                elif note[13] == i:  # 全音符
+                    if stbl == 0:
+                        x += 36.4
+                        canvas_ds.create_image(x, y_123, anchor='nw', image=file_12)
+                        x += 40.6
+                        canvas_ds.create_image(x, y_123, anchor='nw', image=file_12)
+                        x += 38.4
+                        canvas_ds.create_image(x, y_123, anchor='nw', image=file_12)
+                        x += 44.6
+                        count_eight = 0
+                    else:
+                        x += 40
+                        canvas_ds.create_image(x, y, anchor='nw', image=file_0)
+                        x += 40
+                        canvas_ds.create_image(x, y, anchor='nw', image=file_0)
+                        x += 40
+                        canvas_ds.create_image(x, y, anchor='nw', image=file_0)
+                        x += 40
+                        stbl -= 1
+                        count_eight = 0
+                elif note[14] == i:  # 附點二分
+                    if stbl == 0:
+                        x += 36.4
+                        canvas_ds.create_image(x, y_123, anchor='nw', image=file_12)
+                        x += 40.6
+                        canvas_ds.create_image(x, y_123, anchor='nw', image=file_12)
+                        x += 43
+                        count_eight = 0
+                    else:
+                        x += 40
+                        canvas_ds.create_image(x, y, anchor='nw', image=file_0)
+                        x += 40
+                        canvas_ds.create_image(x, y, anchor='nw', image=file_0)
+                        x += 40
+                        stbl -= 1
+                        count_eight = 0
+                elif note[15] == i:  # 1點do
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_1)
+                    y -= 10
+                    x += 6
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_14)
+                    y += 10
+                    x -= 6
+                    if sharp[0] == 1:
+                        x -= 2
+                        y -= 7
+                        canvas_ds.create_image(x, y, anchor='nw', image=file_re)
+                        x += 2
+                        y += 7
+                        sharp[0] = 0
+                elif note[16] == i:  # 1點re
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_2)
+                    y -= 10
+                    x += 6
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_14)
+                    y += 10
+                    x -= 6
+                    if sharp[1] == 1:
+                        x -= 2
+                        y -= 7
+                        canvas_ds.create_image(x, y, anchor='nw', image=file_re)
+                        x += 2
+                        y += 7
+                        sharp[1] = 0
+                elif note[17] == i:  # 1點mi
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_3)
+                    y -= 10
+                    x += 6
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_14)
+                    y += 10
+                    x -= 6
+                elif note[18] == i:  # 1點fa
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_4)
+                    y -= 10
+                    x += 6
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_14)
+                    y += 10
+                    x -= 6
+                    if sharp[2] == 1:
+                        x -= 2
+                        y -= 7
+                        canvas_ds.create_image(x, y, anchor='nw', image=file_re)
+                        x += 2
+                        y += 7
+                        sharp[2] = 0
+                elif note[19] == i:  # 1點so
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_5)
+                    y -= 10
+                    x += 6
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_14)
+                    y += 10
+                    x -= 6
+                    if sharp[3] == 1:
+                        x -= 2
+                        y -= 7
+                        canvas_ds.create_image(x, y, anchor='nw', image=file_re)
+                        x += 2
+                        y += 7
+                        sharp[3] = 0
+                elif note[20] == i:  # 1點la
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_6)
+                    y -= 10
+                    x += 6
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_14)
+                    y += 10
+                    x -= 6
+                    if sharp[4] == 1:
+                        x -= 2
+                        y -= 7
+                        canvas_ds.create_image(x, y, anchor='nw', image=file_re)
+                        x += 2
+                        y += 7
+                        sharp[4] = 0
+                elif note[21] == i:  # 1點si
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_7)
+                    y -= 10
+                    x += 6
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_14)
+                    y += 10
+                    x -= 6
+                elif note[22] == i:  # 2點do
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_1)
+                    y -= 10
+                    x += 6
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_14)
+                    y -= 10
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_14)
+                    y += 20
+                    x -= 6
+                    if sharp[0] == 1:
+                        x -= 2
+                        y -= 7
+                        canvas_ds.create_image(x, y, anchor='nw', image=file_re)
+                        x += 2
+                        y += 7
+                        sharp[0] = 0
+                elif note[23] == i:  # 2點re
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_2)
+                    y -= 10
+                    x += 6
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_14)
+                    y -= 10
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_14)
+                    y += 20
+                    x -= 6
+                    if sharp[1] == 1:
+                        x -= 2
+                        y -= 7
+                        canvas_ds.create_image(x, y, anchor='nw', image=file_re)
+                        x += 2
+                        y += 7
+                        sharp[1] = 0
+                elif note[24] == i:  # #do
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_1)
+                    x -= 2
+                    y -= 7
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_inc)
+                    x += 2
+                    y += 7
+                    sharp[0] += 1
+                elif note[25] == i:  # #re
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_2)
+                    x -= 4
+                    y -= 7
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_inc)
+                    x += 4
+                    y += 7
+                    sharp[1] += 1
+                elif note[26] == i:  # #fa
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_4)
+                    x -= 4
+                    y -= 7
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_inc)
+                    x += 4
+                    y += 7
+                    sharp[2] += 1
+                elif note[27] == i:  # #so
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_5)
+                    x -= 5
+                    y -= 7
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_inc)
+                    x += 5
+                    y += 7
+                    sharp[3] += 1
+                elif note[28] == i:  # #la
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_6)
+                    x -= 5
+                    y -= 7
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_inc)
+                    x += 5
+                    y += 7
+                    sharp[4] += 1
+                elif note[29] == i:  # 1點#do
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_1)
+                    x -= 2
+                    y -= 7
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_inc)
+                    x += 2
+                    y += 7
+                    y -= 10
+                    x += 6
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_14)
+                    y += 10
+                    x -= 6
+                    sharp[0] += 1
+                elif note[30] == i:  # 1點#re
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_2)
+                    x -= 4
+                    y -= 7
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_inc)
+                    x += 4
+                    y += 7
+                    y -= 10
+                    x += 6
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_14)
+                    y += 10
+                    x -= 6
+                    sharp[1] += 1
+                elif note[31] == i:  # 1點#fa
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_4)
+                    x -= 4
+                    y -= 7
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_inc)
+                    x += 4
+                    y += 7
+                    y -= 10
+                    x += 6
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_14)
+                    y += 10
+                    x -= 6
+                    sharp[2] += 1
+                elif note[32] == i:  # 1點#so
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_5)
+                    x -= 4
+                    y -= 7
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_inc)
+                    x += 4
+                    y += 7
+                    y -= 10
+                    x += 6
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_14)
+                    y += 10
+                    x -= 6
+                    sharp[3] += 1
+                elif note[33] == i:  # 1點#la
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_6)
+                    x -= 4
+                    y -= 7
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_inc)
+                    x += 4
+                    y += 7
+                    y -= 10
+                    x += 6
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_14)
+                    y += 10
+                    x -= 6
+                    sharp[4] += 1
+                elif note[34] == i:  # 2點#do
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_1)
+                    x -= 2
+                    y -= 7
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_inc)
+                    x += 2
+                    y += 7
+                    y -= 10
+                    x += 6
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_14)
+                    y -= 10
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_14)
+                    y += 20
+                    x -= 6
+                    sharp[0] += 1
+
+                elif note[35] == i:  # 2點#re
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_2)
+                    y -= 10
+                    x += 6
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_14)
+                    y -= 10
+                    canvas_ds.create_image(x, y, anchor='nw', image=file_14)
+                    y += 20
+                    x -= 6
+                    sharp[1] += 1
+
+        canvas_ds.pack()
+        self.mainloop()
+
+    def setup_config(self):  # 抓取子視窗資料
+        res = self.ask_userinfo()
+        if res is None: return
+
+        self.tempo, self.speed = res  # 更新變數
+
+        self.l1.config(text=self.tempo)  # 更新主視窗資料
+        self.l2.config(text=self.speed)
+
+        fw = open('music1.txt', 'w')  # 清空music資料
+        fw.truncate()
+        fw.close()
+
+        fr = open('speed.txt', 'w')  # 輸出速度資料
+        fr.write(self.speed)
+        fr.write('\n')
+        fr.close()
+
+    def ask_userinfo(self):  # 等待子視窗
+        inputDialog = top_UI()
+        self.wait_window(inputDialog)
+        return inputDialog.userinfo
+
+
+if __name__ == '__main__':
+    app = main_UI()
+    app.mainloop()
